@@ -7,6 +7,10 @@ import DNN
 
 
 class MyNet():
+    """myself nerual nectwork
+
+    """
+
     def __init__(self):
         self.cl1 = CNN.Conv2D(28, 28, 1, 5, 5, 6, 0, 1, Activators.Sigmoid(
         ), 0.02)
