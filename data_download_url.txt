@@ -1,0 +1,4 @@
+http://luanpeng.oss-cn-qingdao.aliyuncs.com/csdn/python/%E6%89%8B%E5%86%99%E4%BD%93%E6%95%B0%E6%8D%AE/t10k-images.idx3-ubyte
+http://luanpeng.oss-cn-qingdao.aliyuncs.com/csdn/python/%E6%89%8B%E5%86%99%E4%BD%93%E6%95%B0%E6%8D%AE/t10k-labels.idx1-ubyte
+http://luanpeng.oss-cn-qingdao.aliyuncs.com/csdn/python/%E6%89%8B%E5%86%99%E4%BD%93%E6%95%B0%E6%8D%AE/train-images.idx3-ubyte
+http://luanpeng.oss-cn-qingdao.aliyuncs.com/csdn/python/%E6%89%8B%E5%86%99%E4%BD%93%E6%95%B0%E6%8D%AE/train-labels.idx1-ubyte
