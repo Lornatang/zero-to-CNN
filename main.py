@@ -7,45 +7,42 @@ import DNN
 
 
 class MyNet():
-    """myself nerual nectwork
-
-    """
-
     def __init__(self):
-        self.cl1 = CNN.Conv2D(28, 28, 1, 5, 5, 6, 0, 1, Activators.Sigmoid(
+        self.conv1 = CNN.Conv2D(28, 28, 1, 5, 5, 6, 0, 1, Activators.Sigmoid(
         ), 0.02)
-        self.pl1 = CNN.MaxPooling2D(24, 24, 6, 2, 2, 2)
-        self.cl2 = CNN.Conv2D(12, 12, 6, 5, 5, 12, 0, 1, Activators.Sigmoid(
+        self.maxpool1 = CNN.MaxPooling2D(24, 24, 6, 2, 2, 2)
+        self.conv2 = CNN.Conv2D(12, 12, 6, 5, 5, 12, 0, 1, Activators.Sigmoid(
         ), 0.02)
-        self.pl2 = CNN.MaxPooling2D(8, 8, 12, 2, 2, 2)
-        self.fl1 = DNN.FullConnected(
+        self.maxpool2 = CNN.MaxPooling2D(8, 8, 12, 2, 2, 2)
+        self.fullconnect = DNN.FullConnected(
             192, 10, Activators.Sigmoid(), 0.02)
 
     def forward(self, onepic):
-        self.cl1.forward(onepic)
-        self.pl1.forward(self.cl1.output_channels)
-        self.cl2.forward(self.pl1.output_channels)
-        self.pl2.forward(self.cl2.output_channels)
-        flinput = self.pl2.output_channels.flatten().reshape(-1, 1)
-        self.fl1.forward(flinput)
-        return self.fl1.output
+        self.conv1.forward(onepic)
+        self.maxpool1.forward(self.conv1.output_channels)
+        self.conv2.forward(self.maxpool1.output_channels)
+        self.maxpool2.forward(self.conv2.output_channels)
+        flinput = self.maxpool2.output_channels.flatten().reshape(-1, 1)
+        self.fullconnect.forward(flinput)
+        return self.fullconnect.output
 
     def backward(self, onepic, labels):
-        delta = np.multiply(self.fl1.activator.backward(
-            self.fl1.output), (labels - self.fl1.output))
+        delta = np.multiply(self.fullconnect.activator.backward(
+            self.fullconnect.output), (labels - self.fullconnect.output))
 
-        self.fl1.backward(delta)
-        self.fl1.update()
-        sensitivity_array = self.fl1.delta.reshape(
-            self.pl2.output_channels.shape)
-        self.pl2.backward(self.cl2.output_channels, sensitivity_array)
-        self.cl2.backward(self.pl1.output_channels,
-                          self.pl2.delta_array, Activators.Sigmoid())
-        self.cl2.update()
-        self.pl1.backward(self.cl1.output_channels, self.cl2.delta_array)
-        self.cl1.backward(onepic, self.pl1.delta_array,
-                          Activators.Sigmoid())
-        self.cl1.update()
+        self.fullconnect.backward(delta)
+        self.fullconnect.update()
+        sensitivity_array = self.fullconnect.delta.reshape(
+            self.maxpool2.output_channels.shape)
+        self.maxpool2.backward(self.conv2.output_channels, sensitivity_array)
+        self.conv2.backward(self.maxpool1.output_channels,
+                            self.maxpool2.delta_array, Activators.Sigmoid())
+        self.conv2.update()
+        self.maxpool1.backward(
+            self.conv1.output_channels, self.conv2.delta_array)
+        self.conv1.backward(onepic, self.maxpool1.delta_array,
+                            Activators.Sigmoid())
+        self.conv1.update()
 
 
 if __name__ == '__main__':
